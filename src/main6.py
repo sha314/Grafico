@@ -32,6 +32,8 @@ from PyQt5.QtCore import(
 
 
 import pandas as pd
+import matplotlib.pyplot as plt
+
 
 import dataframe_model
 
@@ -72,15 +74,27 @@ class MainWindow(QMainWindow):
         # Create upper toolbar with menu options
         tb = QToolBar(self)
         menu = QMenu(self)
-        db_action = QAction("Open file", self)
-        db_action.setStatusTip("Select a file to use as a database")
-        # db_action.triggered.connect(self.open_new_db)
-        menu.addAction(db_action)
+        menu_plot = QAction("Plot", self)
+        menu_plot.setStatusTip("Select a file to use as a database")
+        menu_plot.triggered.connect(self.plot_graph)
+        menu.addAction(menu_plot)
         tb.addWidget(menu)
         tb.setAllowedAreas(Qt.TopToolBarArea)
         tb.setFloatable(False)
         tb.setMovable(False)
         self.addToolBar(tb)
+
+
+    def plot_graph(self):
+        print("plotting graph")
+        graph_path = ProjectDirectory + "/Graph1.pdf"
+        print(self.data_frame)
+        self.data_frame.plot(x='X',y='x^2')
+        plt.savefig(graph_path)
+        
+
+
+        pass
 
 
     def get_work_panel_ui(self):
@@ -115,7 +129,7 @@ class MainWindow(QMainWindow):
     def load_data(self):
 
         data_path="./project/test.csv"
-        df = pd.read_csv(data_path)
+        self.data_frame = pd.read_csv(data_path)
 
         # view = QTableView()
         # view.resize(800, 500)
@@ -123,7 +137,7 @@ class MainWindow(QMainWindow):
         self.table_widget.setAlternatingRowColors(True)
         self.table_widget.setSelectionBehavior(QTableView.SelectRows)
 
-        model = dataframe_model.PandasModel(df)
+        model = dataframe_model.PandasModel(self.data_frame)
         self.table_widget.setModel(model)
         self.table_widget.show()
 
