@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QAction, QToolBar
+from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QAction, QToolBar, QDesktopWidget
 from PyQt5.QtCore import QSize    
 from PyQt5.QtGui import QIcon
 from PyQt5 import Qt
@@ -42,16 +42,18 @@ ProjectDirectory="./project"
 class MainWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self)
-
-        self.setMinimumSize(QSize(500, 300))    
         self.setWindowTitle("Grafico") 
+        self.setMinimumSize(QSize(500, 300))
+        screen = QDesktopWidget().screenGeometry()
+        self.setGeometry(0, 0, int(screen.width()*.8), int(screen.height()*.8))  
+        
 
         # Add button widget
-        pybutton = QPushButton('Pyqt', self)
-        pybutton.clicked.connect(self.clickMethod)
-        pybutton.resize(100,32)
-        pybutton.move(130, 30)        
-        pybutton.setToolTip('This is a tooltip message.')  
+        # pybutton = QPushButton('Pyqt', self)
+        # pybutton.clicked.connect(self.clickMethod)
+        # pybutton.resize(100,32)
+        # pybutton.move(130, 30)        
+        # pybutton.setToolTip('This is a tooltip message.')  
 
 
         self.main_widget = QtWidgets.QWidget(self)
@@ -64,7 +66,22 @@ class MainWindow(QMainWindow):
 
 
         self._create_menubar()
-        # self._createToolBars()
+        self._createToolBars()
+
+    def _createToolBars(self):
+        # Create upper toolbar with menu options
+        tb = QToolBar(self)
+        menu = QMenu(self)
+        db_action = QAction("Open file", self)
+        db_action.setStatusTip("Select a file to use as a database")
+        # db_action.triggered.connect(self.open_new_db)
+        menu.addAction(db_action)
+        tb.addWidget(menu)
+        tb.setAllowedAreas(Qt.TopToolBarArea)
+        tb.setFloatable(False)
+        tb.setMovable(False)
+        self.addToolBar(tb)
+
 
     def get_work_panel_ui(self):
 
@@ -127,15 +144,15 @@ class MainWindow(QMainWindow):
         layout.addWidget(tree)
         return layout
     
-    def _createToolBars(self):
-        # Using a title
-        fileToolBar = self.addToolBar("File")
-        # Using a QToolBar object
-        editToolBar = QToolBar("Edit", self)
-        self.addToolBar(editToolBar)
-        # Using a QToolBar object and a toolbar area
-        helpToolBar = QToolBar("Help", self)
-        # self.addToolBar(Qt.LeftToolBarArea, helpToolBar)
+    # def _createToolBars(self):
+    #     # Using a title
+    #     fileToolBar = self.addToolBar("File")
+    #     # Using a QToolBar object
+    #     editToolBar = QToolBar("Edit", self)
+    #     self.addToolBar(editToolBar)
+    #     # Using a QToolBar object and a toolbar area
+    #     helpToolBar = QToolBar("Help", self)
+    #     # self.addToolBar(Qt.LeftToolBarArea, helpToolBar)
 
     def _create_menubar(self):
         # Create new action
@@ -195,8 +212,8 @@ class MainWindow(QMainWindow):
     def exitCall(self):
         print('Exit app')
 
-    def clickMethod(self):
-        print('PyQt')
+    # def clickMethod(self):
+    #     print('PyQt')
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
