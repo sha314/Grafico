@@ -1,6 +1,6 @@
 import sys
 from PyQt5 import QtCore, QtWidgets
-from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QAction, QToolBar, QDesktopWidget
+from PyQt5.QtWidgets import QMainWindow, QWidget, QPushButton, QAction, QToolBar, QDesktopWidget, QDialog
 from PyQt5.QtCore import QSize    
 from PyQt5.QtGui import QIcon
 from PyQt5 import Qt
@@ -36,6 +36,7 @@ import matplotlib.pyplot as plt
 
 
 import dataframe_model
+import plot_setting
 
 
 ProjectDirectory="./project"
@@ -70,6 +71,15 @@ class MainWindow(QMainWindow):
         self._create_menubar()
         self._createToolBars()
 
+    def dialogue_plot_options(self):
+        dlg = plot_setting.PlotDialog()
+        if dlg.exec():
+            print("success")
+        else:
+            print("Failed")
+
+        pass
+
     def _createToolBars(self):
         # Create upper toolbar with menu options
         tb = QToolBar(self)
@@ -86,6 +96,7 @@ class MainWindow(QMainWindow):
 
 
     def plot_graph(self):
+        self.dialogue_plot_options()
         print("plotting graph")
         graph_path = ProjectDirectory + "/Graph1.pdf"
         print(self.data_frame)
